@@ -6,7 +6,6 @@ getArg() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -$key|--$key)
-        echo "$2"
         return 0
         ;;
     esac
