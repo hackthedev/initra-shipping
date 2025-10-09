@@ -1,5 +1,27 @@
-echo "This script did actually run yes"
-read -p "Whats your name?" name
-echo "Hello, $name"
+#!/bin/bash
+
+getArg() {
+  local key="$1"
+  shift
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -$key|--$key)
+        echo "$2"
+        return 0
+        ;;
+    esac
+    shift
+  done
+  return 1
+}
+
+NAME=$(getArg "name" "$@")
+
+if [[ -z "$FILE" ]]; then
+  echo "Missing Parameter -name"
+  exit 1
+fi
+
+echo "Hello $NAME"
 
 echo "initra://ssh/close"
