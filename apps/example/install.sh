@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# small helper to get arguments by name
+# helper to get args by name
 getArg() {
   local key="$1"
   shift
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -$key|--$key)
+        echo "$2"
         return 0
         ;;
     esac
@@ -15,18 +16,18 @@ getArg() {
   return 1
 }
 
-# setup variable
-NAME=$(getArg "name" "$@")
 
-# check if variable is null
-if [[ -z "NAME" ]]; then
+NAME="$(getArg "name" "$@")"
+
+# check if null
+if [[ -z "$NAME" ]]; then
   echo "Missing Parameter -name"
   exit 1
 fi
 
-
-# continue script :)
+# display it
 echo "Hello $NAME"
 
+# end signals. very important!!
 echo "initra://install/done"
 echo "initra://ssh/close"
