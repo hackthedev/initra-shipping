@@ -9,5 +9,11 @@
   "updated": null,
   "dependencies": [
   ],
-  "args": ["name"]
+  "args": {
+    "name": {
+      "title": "MariaDB",
+      "text": "Do you want to disable the default user?",
+      "type": "boolean"
+    }
+  }
 }
