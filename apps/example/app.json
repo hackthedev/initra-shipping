@@ -8,6 +8,7 @@
   "created": null,
   "updated": null,
   "dependencies": [
+    "update"
   ],
   "args": {
     "name": {

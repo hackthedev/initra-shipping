@@ -1,12 +1,14 @@
 {
-  "id": "example2",
-  "title": "MariaDB 2",
-  "description": "MariaDB 2 is basically a better version of MySQL, performing faster and more.",
+  "id": "update",
+  "title": "Updater",
+  "description": "Simply runs apt update and upgrade.",
   "image": "https://www.designtagebuch.de/wp-content/uploads/mediathek//2008/10/pepsi-logo.jpg",
   "author": "Marcel",
   "github": null,
   "created": null,
   "updated": null,
   "dependencies": [
-  ]
+  ],
+  "args": {
+  }
 }

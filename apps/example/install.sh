@@ -27,7 +27,6 @@ fi
 
 # continue script :)
 echo "Hello $NAME"
-sudo apt update -y
 
 echo "initra://install/done"
 echo "initra://ssh/close"
