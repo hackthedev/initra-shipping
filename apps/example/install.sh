@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# small helper to get arguments by name
 getArg() {
   local key="$1"
   shift
@@ -14,13 +15,17 @@ getArg() {
   return 1
 }
 
+# setup variable
 NAME=$(getArg "name" "$@")
 
-if [[ -z "$FILE" ]]; then
+# check if variable is null
+if [[ -z "NAME" ]]; then
   echo "Missing Parameter -name"
   exit 1
 fi
 
+
+# continue script :)
 echo "Hello $NAME"
 
 echo "initra://ssh/close"
