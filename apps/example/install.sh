@@ -27,5 +27,6 @@ fi
 
 # continue script :)
 echo "Hello $NAME"
+sudo apt update -y
 
 echo "initra://ssh/close"
