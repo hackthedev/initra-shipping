@@ -1,0 +1,55 @@
+.server .buttons {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.server .right{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+}
+
+.server .buttons .delete{
+    background: linear-gradient(
+            135deg,
+            hsl(from var(--accent) h calc(s * 3) calc(l * 3)),
+            hsl(from var(--accent) h calc(s * 2) calc(l * 2))
+    );
+}
+
+.actions{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: right;
+    font-size: 12px;
+}
+
+.actions .action-button{
+    display: flex;
+
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 4px;
+
+    background: linear-gradient(
+            135deg,
+            hsl(from var(--accent) h calc(s * 3) calc(l * 3)),
+            hsl(from var(--accent) h calc(s * 2) calc(l * 2))
+    );
+
+    user-select: none;
+}
+
+.actions .action-button:hover{
+    background: linear-gradient(
+            135deg,
+            hsl(from var(--accent) h calc(s * 3) calc(l * 3.5)),
+            hsl(from var(--accent) h calc(s * 2) calc(l * 2.5))
+    );
+    transition: all 400ms;
+}
