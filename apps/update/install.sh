@@ -20,10 +20,10 @@ getArg() {
 NAME="$(getArg "name" "$@")"
 
 # check if null
-if [[ -z "$NAME" ]]; then
-  echo "Missing Parameter -name"
-  exit 1
-fi
+#if [[ -z "$NAME" ]]; then
+#  echo "Missing Parameter -name"
+#  exit 1
+#fi
 
 # something with it. this is just an example app!
 # because of that we dont need any arguments here
