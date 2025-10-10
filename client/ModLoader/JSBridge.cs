@@ -50,6 +50,14 @@ namespace ModLoader
             return Form1.branch;
         }
 
+        public void SetCurrentBranch(string branch)
+        {
+            Form1.branch = branch;
+            Initra.Properties.Settings.Default.branch = branch;
+            Initra.Properties.Settings.Default.Save();
+            Initra.Properties.Settings.Default.Reload();
+        }
+
 
         public void ResolveFromJS(string value)
         {

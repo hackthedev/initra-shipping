@@ -20,7 +20,7 @@
     <script defer src="js/apps.js"></script>
     <script defer src="js/servers.js"></script>
 
-    <title>Initra AutoInstaller</title>
+    <title>Initra</title>
 </head>
 <body>
 
@@ -60,13 +60,20 @@
         branchSelector.insertAdjacentHTML("beforeend", `<option value="${currentBranch}">${currentBranch}</option>`);
 
         branchSelector.onclick = async (e) => {
-            branchSelector.innerHTML = "";
             let branches = await getBranches();
+            console.log(branches);
 
-            for(let branch of branches.reverse()){
-                console.log(branch);
-                branchSelector.insertAdjacentHTML("beforeend", `<option value="${branch.name}">${branch.name}</option>`);
+            let code = "";
+            for(let branch of branches){
+                code += `<option value="${branch.name}">${branch.name}</option>`;
             }
+
+            branchSelector.innerHTML = code;
+            branchSelector.value = await Initra().GetCurrentBranch();
+        }
+
+        branchSelector.onchange = async (e) => {
+            await Initra().SetCurrentBranch(branchSelector.value)
         }
     })
 
