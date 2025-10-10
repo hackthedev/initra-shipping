@@ -1,0 +1,15 @@
+{
+  "id": "sudo",
+  "title": "sudo",
+  "description": "Installs sudo on your linux machine.",
+  "image": "",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "dependencies": [
+    "update"
+  ],
+  "args": {
+  }
+}
