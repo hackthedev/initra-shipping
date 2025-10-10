@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # this is where you do your install logic
-sudo apt install apache2
+sudo apt install apache2 -y
 
 echo "initra://install/done"
 echo "initra://ssh/close"
