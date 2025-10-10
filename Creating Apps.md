@@ -1,6 +1,6 @@
 # Creating Apps
 
-To create or add your own app, you'll need create an app folder, like `update`. In this folder you'll need two files: `app.json` and `install.sh`.
+To create or add your own app, you'll need to create an app folder, like `update`. In this folder you'll need two files: `app.json` and `install.sh`.
 
 > [!NOTE]
 >
