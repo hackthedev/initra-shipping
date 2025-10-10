@@ -17,7 +17,7 @@ getArg() {
 }
 
 # set the name as variable
-NAME="$(getArg "name" "$@")"
+#NAME="$(getArg "name" "$@")"
 
 # check if null
 #if [[ -z "$NAME" ]]; then
