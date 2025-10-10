@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Will always signal to initra even on crashes
-trap 'echo "initra://install/error"; echo "initra://ssh/close"; exit 1' ERR INT
-
 # helper to get args by name
 getArg() {
   local key="$1"
