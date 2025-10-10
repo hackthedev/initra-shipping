@@ -9,6 +9,7 @@
   "updated": null,
   "type": "app",
   "dependencies": [
+    "update",
     "mariadb",
     "apache2"
   ],
