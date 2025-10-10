@@ -1,0 +1,22 @@
+{
+  "id": "phpmyadmin",
+  "title": "phpMyAdmin",
+  "description": "Installs phpMyAdmin, a web interface for managing your sql server",
+  "image": "",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "type": "app",
+  "dependencies": [
+    "mariadb",
+    "apache2"
+  ],
+  "args": {
+    "enableRootLogin": {
+      "title": "phpMyAdmin",
+      "text": "Do you want to enable the root user login?",
+      "type": "boolean"
+    }
+  }
+}

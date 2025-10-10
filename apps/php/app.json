@@ -1,0 +1,17 @@
+{
+  "id": "php",
+  "title": "PHP",
+  "description": "Installs PHP 8 and modules.",
+  "image": "",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "dependencies": [
+    "update",
+    "apache2",
+    "sudo"
+  ],
+  "args": {
+  }
+}
