@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/apps.css">
+    <link rel="stylesheet" href="css/servers.css">
+
+    <script defer src="js/hover.js"></script>
+    <script defer src="js/prompts.js"></script>
+
+    <script defer src="js/apps.js"></script>
+    <script defer src="js/servers.js"></script>
+
+    <title>Initra</title>
+</head>
+<body>
+
+<div id="nav">
+    <h1>Initra</h1>
+
+    <div id="items">
+        <ul>
+            <li onclick="loadApps()">Apps</li>
+            <li onclick="loadServers()">Servers</li>
+        </ul>
+    </div>
+
+    <div id="branchSelectContainer">
+        <label for="branchSelector">Branch:</label>
+        <select name="branch" id="branchSelector">
+
+        </select>
+    </div>
+</div>
+
+<div id="container">
+    <h1 id="title">Welcome!</h1>
+
+    <div id="content">
+
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", async function() {
+        let branchSelector = document.getElementById("branchSelector");
+        branchSelector.innerHTML = "";
+
+        let currentBranch = await getCurrentBranch();
+        branchSelector.insertAdjacentHTML("beforeend", `<option value="${currentBranch}">${currentBranch}</option>`);
+
+        branchSelector.onclick = async (e) => {
+            let branches = await getBranches();
+            console.log(branches);
+
+            let code = "";
+            for(let branch of branches){
+                code += `<option value="${branch.name}">${branch.name}</option>`;
+            }
+
+            branchSelector.innerHTML = code;
+            branchSelector.value = await Initra().GetCurrentBranch();
+        }
+
+        branchSelector.onchange = async (e) => {
+            await Initra().SetCurrentBranch(branchSelector.value)
+        }
+    })
+
+    async function getCurrentBranch(){
+        return await Initra().GetCurrentBranch()
+    }
+
+    async function getBranches(){
+        if(isLauncher()){
+            let raw = await Initra().GetBranches("hackthedev/initra-shipping");
+            return JSON.parse(raw);
+        }
+    }
+
+    function loadApps(){
+        displayApps(document.getElementById("content"));
+    }
+
+    function loadServers(){
+        displayServers(document.getElementById("content"));
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        loadApps()
+    })
+
+    function setTitle(text){
+        document.getElementById("container").querySelector("#title").innerHTML = text;
+        document.title = `Initra - ${text}`;
+    }
+</script>
+
+</body>
+</html>

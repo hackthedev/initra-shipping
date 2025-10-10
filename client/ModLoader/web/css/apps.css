@@ -1,0 +1,96 @@
+.app-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 30px;
+    justify-content: center;
+}
+
+.app {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    font-size: 12px;
+
+    background: linear-gradient(
+            135deg,
+            hsl(from var(--accent) h s calc(l * 2.5)),
+            hsl(from var(--accent) h s calc(l * 1.5))
+    );
+
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 300px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app .left {
+    flex-shrink: 0;
+}
+
+.app .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.app:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.app .image {
+    height: 40px;
+    width: 40px;
+    border-radius: 6px;
+
+    background-size: cover;
+    object-fit: cover;
+    background-color: transparent;
+    background-position: center center;
+}
+
+.app .title{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.app .author{
+    font-style: italic;
+    font-size: 12px;
+    color: hsl(from var(--accent) h s calc(l * 4.2));
+    margin-bottom: 8px;
+}
+
+.app .description {
+    display: block !important;
+    width: 100% !important;
+}
+
+.app .install{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+
+    background: linear-gradient(90deg,
+            hsl(from var(--accent) h calc(s * 2) calc(l * 2.75)),
+            hsl(from var(--accent) h calc(s * 2) calc(l * 2))
+    );
+
+    font-weight: bold;
+    text-align: center;
+
+    margin-top: 20px;
+    padding: 8px;
+
+    border-radius: 8px;
+
+    width: calc(100% - 16px);
+    cursor: pointer;
+}

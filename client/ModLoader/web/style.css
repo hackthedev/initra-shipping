@@ -1,0 +1,131 @@
+:root{
+    /*
+    blue: 252f39
+    brown: 392b25
+    red: 392525
+     */
+    --accent: #252f39
+}
+
+* {
+    scrollbar-color: hsl(from var(--accent) h s calc(l * 3)) transparent;
+    scrollbar-width: thin;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    background: radial-gradient(
+        hsl(from var(--accent) h s calc(l * 1.5)),
+        hsl(from var(--accent) h s calc(l * 1))
+    );
+    color: hsl(from var(--accent) h s calc(l * 5));
+
+    font-family: "Roboto", sans-serif;
+}
+
+#nav{
+    float: left;
+    display: block;
+    position: relative;
+
+    background-color: hsl(from var(--accent) h s calc(l * 0.5));
+    height: 100vh;
+
+    width: 300px;
+    user-select: none;
+}
+
+#nav #branchSelectContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 20px;
+
+    color: hsl(from var(--accent) h s calc(l * 4));
+    font-size: 12px;
+}
+
+#nav #branchSelectContainer select{
+    margin-left: 10px;
+
+    color: hsl(from var(--accent) h s calc(l * 5));
+    background-color: hsl(from var(--accent) h s calc(l * 2));
+    padding: 2px 4px;
+    border-radius: 6px;
+    outline: none;
+    font-size: 12px;
+}
+
+#nav h1{
+    margin: 40px 0 20px 0;
+    text-align: center;
+}
+
+#nav #items ul{
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+
+    overflow-y: auto;
+    word-break: break-word;
+}
+
+#nav #items ul li{
+    display: flex;
+    align-self: center;
+
+    padding: 10px 20px;
+    width: calc(80% - 40px);
+
+    background: linear-gradient(
+            90deg,
+            hsla(from var(--accent) h s calc(l * 2) / 60%),
+            hsl(from var(--accent) h s calc(l * 0.5))
+    );
+
+    color: hsl(from var(--accent) h s calc(l * 5));
+    font-weight: bold;
+    font-size: 18px;
+
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+
+    list-style: none;
+
+    margin: 4px 0;
+    cursor: pointer;
+}
+
+#nav #items ul li:hover{
+    background: linear-gradient(90deg, hsl(from var(--accent) h s calc(l * 3)), hsl(from var(--accent) h s calc(l * 0.5)));
+    color: hsl(from var(--accent) h s calc(l * 5));
+}
+
+#container{
+    display: flex;
+    flex-direction: column;
+
+    width: calc(100% - 300px - 80px);
+    height: calc(100vh - 40px);
+
+    padding: 20px 40px;
+
+    overflow-y: auto;
+    word-break: break-word;
+}
+
+#content{
+
+}

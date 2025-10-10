@@ -1,0 +1,233 @@
+using Initra;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
+using Microsoft.Win32;
+using System;
+using System.Diagnostics;
+using System.IO.Pipes;
+using System.Runtime.ConstrainedExecution;
+using System.Web;
+
+namespace ModLoader
+{
+    public partial class Form1 : Form
+    {
+        public static WebView2 webView;
+        private string launchUri;
+
+        public static JSBridge bridge;
+        public static StorageHelper storage;
+        public static URIHelper urihelper;
+        public static Form1 formhelper;
+        public static GitHubHelper githubHelper;
+        public static SshHelper sshHelper;
+
+        private System.Windows.Forms.Timer fadeTimer;
+        private bool isFadingOut = false;
+        public static bool isDebug = false;
+        public static string branch = Initra.Properties.Settings.Default.branch;
+
+        public Form1(string uri = null)
+        {
+            isDebug = System.Diagnostics.Debugger.IsAttached;
+
+
+            bridge = new JSBridge();
+            storage = new StorageHelper();
+            urihelper = new URIHelper();
+            githubHelper = new GitHubHelper();
+            sshHelper = new SshHelper();
+
+            URIHelper.RegisterUriScheme();
+
+            launchUri = uri;
+            if (!string.IsNullOrEmpty(launchUri))
+            {
+                URIHelper.HandleCustomUri(launchUri);
+
+            }
+
+            // Hide until it has loaded the page
+            this.Opacity = 0;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            InitializeComponent();
+            Task.Run(() => ListenForUris());
+
+
+            webView = new WebView2
+            {
+                Dock = DockStyle.Fill
+            };
+
+            this.Controls.Add(webView);
+
+            InitializeAsync();
+        }
+
+        public static Task<string> CallJsFunctionSafe(string functionName, params object[] args)
+        {
+            if (webView.InvokeRequired)
+            {
+                var tcs = new TaskCompletionSource<string>();
+                webView.BeginInvoke(new Action(async () =>
+                {
+                    try
+                    {
+                        string result = await CallJsFunctionInternal(functionName, args);
+                        tcs.TrySetResult(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.TrySetException(ex);
+                    }
+                }));
+                return tcs.Task;
+            }
+
+            return CallJsFunctionInternal(functionName, args);
+        }
+
+        private static async Task<string> CallJsFunctionInternal(string functionName, params object[] args)
+        {
+            // serialise shit
+            string argList = string.Join(", ", args.Select(a =>
+                System.Text.Json.JsonSerializer.Serialize(a)
+            ));
+
+            string script = $"{functionName}({argList});";
+
+            try
+            {
+                string rawResult = await webView.CoreWebView2.ExecuteScriptAsync(script);
+                return rawResult;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("[JS ERROR] " + ex.Message);
+                return null;
+            }
+        }
+
+
+
+        private void ListenForUris()
+        {
+            while (true)
+            {
+                try
+                {
+                    using (var pipe = new NamedPipeServerStream("MySuperSickAppPipeForInitra", PipeDirection.In))
+                    using (var reader = new StreamReader(pipe))
+                    {
+                        pipe.WaitForConnection();
+                        string uri = reader.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(uri))
+                        {
+                            this.Invoke(() => URIHelper.HandleCustomUri(uri));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Pipe error: " + ex.Message);
+                }
+            }
+        }
+
+
+        async void InitializeAsync()
+        {
+            CoreWebView2Environment env = await CoreWebView2Environment.CreateAsync();
+            await webView.EnsureCoreWebView2Async(env);
+            webView.CoreWebView2.Settings.AreHostObjectsAllowed = true;
+            webView.CoreWebView2.AddHostObjectToScript("initra", bridge);
+            webView.CoreWebView2.NavigationCompleted += WebView_NavigationCompleted;
+
+
+            await webView.CoreWebView2.Profile.ClearBrowsingDataAsync(
+                CoreWebView2BrowsingDataKinds.CacheStorage & ~CoreWebView2BrowsingDataKinds.Cookies
+            );
+
+            string indexPath = Path.Combine(Application.StartupPath, "web", "index.html");
+            webView.CoreWebView2.Navigate(indexPath);
+        }
+        private void WebView_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            formhelper = this;
+
+            StartFadeIn(10, 0.1);
+        }
+
+        private void StartFadeIn(int interval, double fadeStep)
+        {
+            this.Opacity = 0;
+            this.BringToFront();
+
+            fadeTimer = new System.Windows.Forms.Timer();
+            fadeTimer.Interval = interval; // milliseconds between steps
+            fadeTimer.Tick += (s, e) =>
+            {
+                if (this.Opacity < 1)
+                {
+                    this.Opacity += fadeStep;
+                }
+                else
+                {
+                    fadeTimer.Stop();
+                    fadeTimer.Dispose();
+                }
+
+                if (this.Opacity == 1)
+                {
+                    this.BringToFront();
+                }
+            };
+            fadeTimer.Start();
+        }
+
+        private void StartFadeOut(int interval, double fadeStep)
+        {
+            isFadingOut = true;
+            this.Opacity = 1;
+            this.BringToFront();
+
+            fadeTimer = new System.Windows.Forms.Timer();
+            fadeTimer.Interval = interval; // milliseconds between steps
+            fadeTimer.Tick += (s, e) =>
+            {
+                if (this.Opacity > 0)
+                {
+                    this.Opacity -= fadeStep;
+                }
+                else
+                {
+                    fadeTimer.Stop();
+                    fadeTimer.Dispose();
+                }
+
+                if (this.Opacity == 0)
+                {
+                    fadeTimer.Stop();
+                    fadeTimer.Dispose();
+                    Application.Exit();
+                }
+            };
+            fadeTimer.Start();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Logger.Clear();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!isFadingOut)
+            {
+                e.Cancel = true;
+                StartFadeOut(10, 0.1);
+            }
+        }
+    }
+}
