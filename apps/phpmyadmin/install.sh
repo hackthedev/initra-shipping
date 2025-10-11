@@ -12,17 +12,18 @@ fi
 
 
 # this is where you do your install logic
-cd /usr/share
-wget -O phpmyadmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip
-unzip phpmyadmin.zip
+wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -O /usr/share/phpmyadmin.zip
 
+cd /usr/share
+unzip phpmyadmin.zip
 rm phpmyadmin.zip
 mv phpMyAdmin-*-all-languages phpmyadmin
 
-chmod -R 0755 phpmyadmin
+
+chmod -R 0755 /usr/share/phpmyadmin
 
 # get config script
-wget -O /etc/apache2/conf-available/phpmyadmin.conf https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/submissions/apps/phpmyadmin/phpmyadmin.conf
+wget https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/submissions/apps/phpmyadmin/phpmyadmin.conf -O /etc/apache2/conf-available/phpmyadmin.conf
 
 a2enconf phpmyadmin
 systemctl reload apache2
