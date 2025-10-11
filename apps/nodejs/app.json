@@ -7,7 +7,7 @@
   "github": null,
   "created": null,
   "updated": null,
-  "type": "package",
+  "type": "app",
   "dependencies": [
     "update"
   ],
