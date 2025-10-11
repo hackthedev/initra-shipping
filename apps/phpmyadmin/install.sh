@@ -38,10 +38,11 @@ if hasOutput which mariadb; then
 
   # set the name as variable
   enableRootLogin="$(getArg "enableRootLogin" "$@")"
+  rootPassword="$(getArg "rootPassword" "$@")"
 
   # check if null
-  if [[ "$enableRootLogin" == "true" ]]; then
-    mariadb -e "UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user = 'root' AND plugin = 'unix_socket';"
+  if [[ "$enableRootLogin" == "true" ]] && [[ -n "$rootPassword" ]]; then
+    mariadb -u root -p"$rootPassword" -e "UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user = 'root' AND plugin = 'unix_socket';"
   fi
 fi
 
