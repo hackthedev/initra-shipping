@@ -11,6 +11,7 @@ rootPw="$(getArg "rootPassword" "$@")"
 # check if null
 if [[ -z "$rootPw" ]]; then
   # no root password set for some reason
+  echo "No password supplied"
 else
   # root password was set so we try to change the pw
   mariadb -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$rootPw';"
