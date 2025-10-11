@@ -23,7 +23,7 @@
     "rootPassword": {
       "title": "phpMyAdmin",
       "text": "Please enter your root password for MariaDB",
-      "type": "boolean"
+      "type": "password"
     }
   }
 }
