@@ -11,9 +11,9 @@
   "dependencies": [
     "update",
     "unzip",
-    "php",
     "mariadb",
-    "apache2"
+    "apache2",
+    "php"
   ],
   "args": {
     "enableRootLogin": {

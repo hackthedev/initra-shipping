@@ -46,5 +46,6 @@ if hasOutput which mariadb; then
   fi
 fi
 
+
 echo "initra://install/done"
 echo "initra://ssh/close"
