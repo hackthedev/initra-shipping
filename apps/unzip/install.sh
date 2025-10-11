@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # this is where you do your install logic
-apt-get install unzip -y
+sudo apt install unzip -y
 
 echo "initra://install/done"
 echo "initra://ssh/close"
