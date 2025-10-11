@@ -10,6 +10,7 @@
   "type": "app",
   "dependencies": [
     "update",
+    "unzip",
     "mariadb",
     "apache2"
   ],
