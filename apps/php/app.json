@@ -7,6 +7,7 @@
   "github": null,
   "created": null,
   "updated": null,
+  "type": "app",
   "dependencies": [
     "update",
     "apache2",
