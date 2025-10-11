@@ -1,38 +1,22 @@
 #!/bin/bash
 
-# helper to get args by name
-getArg() {
-  local key="$1"
-  shift
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -$key|--$key)
-        echo "$2"
-        return 0
-        ;;
-    esac
-    shift
-  done
-  return 1
-}
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
-# set the name as variable
-#NAME="$(getArg "name" "$@")"
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
 
-# check if null
-#if [[ -z "$NAME" ]]; then
-#  echo "Missing Parameter -name"
-#  exit 1
-#fi
+# Download and install Node.js:
+nvm install 22
 
-# something with it. this is just an example app!
-# because of that we dont need any arguments here
-# but the code is left in for examples.
-# echo "Hello $NAME"
+# Verify the Node.js version:
+node -v # Should print "v22.20.0".
 
-# this is where you do your install logic
-sudo apt update -y
-sudo apt upgrade -y
+# Verify npm version:
+npm -v # Should print "10.9.3".
+
+
+
 
 # these lines are a must-have. without it, initra doesnt know
 # if the installation is done and if it should close the connection.
