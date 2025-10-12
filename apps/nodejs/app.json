@@ -9,7 +9,8 @@
   "updated": null,
   "type": "app",
   "dependencies": [
-    "update"
+    "update",
+    "sudo"
   ],
   "args": {
   }
