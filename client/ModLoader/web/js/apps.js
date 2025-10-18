@@ -10,23 +10,93 @@ function isLauncher() {
     return !!window.chrome?.webview?.hostObjects?.initra;
 }
 
-async function displayApps(container){
+async function setupAppPackageFilter(container, includePackages){
+    let showPackagesElement = container.querySelector("#appShowPackages");
+    if(!showPackagesElement) {
+        console.error("Couldnt find show package option element in apps")
+        return;
+    }
+
+    showPackagesElement.checked = includePackages;
+    showPackagesElement.addEventListener("change", async (event) => {
+        const checked = showPackagesElement.checked;
+        await displayApps(container, false, checked);
+    })
+}
+
+async function searchAppsAndPackages(container, includePackages){
+    let searchbar = container.querySelector("#appSearchInput");
+    if(!searchbar) {
+        console.error("Couldnt find search bar element in apps")
+        return;
+    }
+
+    searchbar.addEventListener("input", async (event) => {
+        await displayApps(container, false, includePackages, searchbar.value);
+    })
+}
+
+function setAppSearchbarCursor(container){
+    if(!container){
+        console.error("Couldnt find container element in apps for search bar cursor")
+        return;
+    }
+
+    let searchbar = container.querySelector("#appSearchInput");
+    if (searchbar) {
+        searchbar.focus();
+        const val = searchbar.value;
+        searchbar.setSelectionRange(val.length, val.length);
+    }
+}
+
+async function displayApps(container, refresh = true, includePackages = false, search = null){
     if(!container) return;
-    container.innerHTML = "<div class='app-container'></div>";
+
+    container.innerHTML = `
+        <div class='app-container'>
+            <div id="app-filter">
+                <input type="text" id="appSearchInput" placeholder="Search anything..." value="${search ? search : ""}">
+                
+                <label for="appShowPackages">Show Packages</label>
+                <input type="checkbox" id="appShowPackages">
+            </div>
+        </div>
+    `;
+
+    await setupAppPackageFilter(container, includePackages);
+    await searchAppsAndPackages(container, includePackages);
+
     setTitle("Apps")
 
     // only available in the launcher
     // maybe turn it into a website in the future
     // but domain costs money etc and im broke ;-;
     if(!isLauncher()) return
-    apps = JSON.parse(await Initra().GetApps());
-
-    console.log(apps)
+    if(refresh) apps = JSON.parse(await Initra().GetApps());
 
     for(let githubAppData of apps){
 
         // get github raw data to parse app.json file from app
         let app = JSON.parse(await Initra().GetAppInfo(githubAppData?.name))
+
+        let appType = app?.type;
+
+        if(appType && appType !== "app" && includePackages === false){
+            setAppSearchbarCursor(container);
+            continue
+        }
+
+        if (search !== null && search.trim().length > 0) {
+            const s = search.toLowerCase();
+            const inTitle = app.title?.toLowerCase().includes(s);
+            const inDesc  = app.description?.toLowerCase().includes(s);
+            const inAuth  = app.author?.toLowerCase().includes(s);
+
+            setAppSearchbarCursor(container);
+            if (!inTitle && !inDesc && !inAuth) continue;
+        }
+
 
         let appElement = document.createElement("div");
         appElement.classList.add("app");
@@ -64,6 +134,8 @@ async function displayApps(container){
 
         appElement.querySelector(".right").appendChild(installButton);
         container.querySelector(".app-container").insertAdjacentElement("beforeend", appElement);
+
+        setAppSearchbarCursor(container);
     }
 }
 

@@ -26,7 +26,7 @@ namespace Initra
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "InitraApp");
 
-            var response = await client.GetAsync(Initra.Properties.Settings.Default.githubAppsDir);
+            var response = await client.GetAsync($"https://api.github.com/repos/hackthedev/initra-shipping/contents/apps?ref={Form1.branch}");
             response.EnsureSuccessStatusCode();
 
             string json = await response.Content.ReadAsStringAsync();

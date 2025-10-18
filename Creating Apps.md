@@ -14,6 +14,14 @@ The `app.json` file is responsible for listing your app/package inside Initra. T
 
 ------
 
+## Difference App vs Package
+
+Basically apps and packages are the same. Inside the `app.json` you can define your script as either app or package. The only difference is that apps are meant to be displayed on default, whereas packages are hidden by default. For example, an app would be something like `NodeJS`, whereas `curl` would be a package. 
+
+Packages are meant to be used as dependency by apps.
+
+------
+
 ## Basic app.json
 
 ```json
@@ -26,6 +34,7 @@ The `app.json` file is responsible for listing your app/package inside Initra. T
   "github": null,
   "created": null,
   "updated": null,
+  "type": "package",
   "dependencies": [
   ],
   "args": {
@@ -35,7 +44,7 @@ The `app.json` file is responsible for listing your app/package inside Initra. T
 
 > [!NOTE]
 >
-> `github`, `created` and `updated` are currently **not** implemented.
+> `github`, `created` and `updated` are currently **not** implemented. `type` can be either `app` or `package`.
 
 > [!IMPORTANT]
 >
@@ -51,20 +60,7 @@ The following script comes with a small helper function to parse the arguments y
 #!/bin/bash
 
 # helper to get args by name
-getArg() {
-  local key="$1"
-  shift
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -$key|--$key)
-        echo "$2"
-        return 0
-        ;;
-    esac
-    shift
-  done
-  return 1
-}
+source <(wget -qO- https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/snippets/argument_parser.sh)
 
 # set the name as variable
 NAME="$(getArg "name" "$@")"
@@ -72,7 +68,9 @@ NAME="$(getArg "name" "$@")"
 # check if null
 if [[ -z "$NAME" ]]; then
   echo "Missing Parameter -name"
-  exit 1
+  echo "initra://install/error"
+  echo "initra://ssh/close"
+  exit 1 # if needed
 fi
 
 # something with it. this is just an example app!
@@ -120,6 +118,7 @@ bash install.sh -name true
   "github": null,
   "created": null,
   "updated": null,
+   "type": "package",
   "dependencies": [
   ],
   "args": {
@@ -179,6 +178,7 @@ bash install.sh -disableMariaDbDefaultUser true -removeTestDatabase true
   "github": null,
   "created": null,
   "updated": null,
+   "type": "package",
   "dependencies": [
   ],
   "args": {

@@ -11,9 +11,6 @@
     <Setting Name="storedServers" Type="System.String" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="githubAppsDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://api.github.com/repos/hackthedev/initra-shipping/contents/apps</Value>
-    </Setting>
     <Setting Name="branch" Type="System.String" Scope="User">
       <Value Profile="(Default)">main</Value>
     </Setting>

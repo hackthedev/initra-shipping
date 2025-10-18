@@ -48,11 +48,11 @@ Users can watch dependencies and apps being installed in real time as the termin
 
 ### Apps
 
-![image-20251009220134141](./assets/image-20251009220134141.png)
+![image-20251018054330696](./assets/image-20251018054330696.png)
 
 ### Servers
 
-![image-20251009220528002](./assets/image-20251009220528002.png)
+![image-20251018054513359](./assets/image-20251018054513359.png)
 
 ------
 
@@ -60,4 +60,5 @@ Users can watch dependencies and apps being installed in real time as the termin
 
 - [ ] Add App/Package Creation Wizard
 - [ ] Add Github Rate Limit Handling on UI
-- [ ] Add Search Bar for Apps (and maybe servers)
+- [x] Add Search Bar for Apps (and maybe servers)
+- [ ] Add default options feature to prompts

@@ -1,6 +1,6 @@
 .app-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: row;
 
     flex-wrap: wrap;
     align-items: flex-start;
@@ -24,7 +24,7 @@
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    width: 300px;
+    max-width: 300px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -93,4 +93,33 @@
 
     width: calc(100% - 16px);
     cursor: pointer;
+}
+
+#app-filter{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+
+#app-filter #appSearchInput{
+    background: linear-gradient(
+            135deg,
+            hsl(from var(--accent) h s calc(l * 2.5)),
+            hsl(from var(--accent) h s calc(l * 1.5))
+    );
+
+    color: hsl(from var(--accent) h s calc(l *  5)) !important;
+    padding: 4px 8px;
+
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border: none;
+    border-radius: 4px;
+    outline: none;
+}
+
+#app-filter #appSearchInput::placeholder {
+    color: hsl(from var(--accent) h s calc(l * 75));
+    opacity: 0.6;
 }

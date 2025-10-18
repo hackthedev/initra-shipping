@@ -61,18 +61,6 @@ namespace Initra.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/hackthedev/initra-shipping/contents/apps")]
-        public string githubAppsDir {
-            get {
-                return ((string)(this["githubAppsDir"]));
-            }
-            set {
-                this["githubAppsDir"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("main")]
         public string branch {
             get {

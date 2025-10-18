@@ -98,12 +98,23 @@ namespace ModLoader
 
             ssh.OnOutput += async (msg) =>
             {
+                // if for some reason it wasnt shown anymore, show it again
+                await Form1.CallJsFunctionSafe("showInstallLog", appName);
+
                 Debug.WriteLine(msg);
-                Form1.CallJsFunctionSafe("appendToTtyLog", msg);
 
                 if (msg.Contains("initra://install/done"))
                 {
                     SignalInstallDone();
+
+                    if (!isDependency)
+                    {
+                        Form1.CallJsFunctionSafe("appendToTtyLog", msg);
+                    }
+                }
+                else
+                {
+                    Form1.CallJsFunctionSafe("appendToTtyLog", msg);
                 }
 
                 if (msg.Contains("initra://ssh/close") && !isDependency)
