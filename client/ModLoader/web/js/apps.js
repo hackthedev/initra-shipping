@@ -50,7 +50,11 @@ function setAppSearchbarCursor(container){
     }
 }
 
-async function displayApps(container, refresh = true, includePackages = false, search = null){
+function renderTestApp(appJson){
+    displayApps(document.getElementById("content"), false, true, null, JSON.parse(appJson));
+}
+
+async function displayApps(container, refresh = true, includePackages = false, search = null, customApps = null){
     if(!container) return;
 
     container.innerHTML = `
@@ -75,11 +79,14 @@ async function displayApps(container, refresh = true, includePackages = false, s
     if(!isLauncher()) return
     if(refresh) apps = JSON.parse(await Initra().GetApps());
 
-    for(let githubAppData of apps){
+    let appsJson = customApps ? customApps : apps;
+    if (!Array.isArray(appsJson)) appsJson = [appsJson];
+
+    for(let githubAppData of appsJson){
 
         // get github raw data to parse app.json file from app
-        let app = JSON.parse(await Initra().GetAppInfo(githubAppData?.name))
-
+        let app = customApps ? customApps : JSON.parse(await Initra().GetAppInfo(githubAppData?.name))
+        console.log(app)
         let appType = app?.type;
 
         if(appType && appType !== "app" && includePackages === false){
@@ -100,7 +107,7 @@ async function displayApps(container, refresh = true, includePackages = false, s
 
         let appElement = document.createElement("div");
         appElement.classList.add("app");
-        appElement.id = `app_${app.id}`;
+        appElement.id = `app_${app?.id}`;
 
         appElement.insertAdjacentHTML("beforeend",
             `<div class="left">

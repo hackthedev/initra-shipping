@@ -2,7 +2,7 @@
   "id": "phpmyadmin",
   "title": "phpMyAdmin",
   "description": "Installs phpMyAdmin, a web interface for managing your sql server",
-  "image": "",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjEn3CyWlDjthuy1etTSHbzO7HudyGnb0-yg&s",
   "author": "Marcel",
   "github": null,
   "created": null,

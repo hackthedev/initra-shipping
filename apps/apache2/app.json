@@ -2,7 +2,7 @@
   "id": "apache2",
   "title": "Apache2",
   "description": "Installs Apache2 web server on the machine.",
-  "image": "",
+  "image": "https://sc.filehippo.net/images/t_app-icon-l/p/ddc05574-9b32-11e6-8828-00163ec9f5fa/717876276/apache-http-server-logo",
   "author": "Marcel",
   "github": null,
   "created": null,

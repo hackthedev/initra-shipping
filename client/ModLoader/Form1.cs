@@ -49,7 +49,7 @@ namespace ModLoader
 
             // Hide until it has loaded the page
             this.Opacity = 0;
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.StartPosition = FormStartPosition.CenterScreen;            
 
             InitializeComponent();
             Task.Run(() => ListenForUris());
@@ -63,6 +63,18 @@ namespace ModLoader
             this.Controls.Add(webView);
 
             InitializeAsync();
+        }
+
+        private int GetWidth(int percent)
+        {
+            Screen screen = Screen.PrimaryScreen;
+            return (int)(screen.WorkingArea.Width / 100) * percent;
+        }
+
+        private int GetHeight(int percent)
+        {
+            Screen screen = Screen.PrimaryScreen;
+            return (int)(screen.WorkingArea.Height / 100) * percent;
         }
 
         public static Task<string> CallJsFunctionSafe(string functionName, params object[] args)
@@ -219,6 +231,13 @@ namespace ModLoader
         private void Form1_Load(object sender, EventArgs e)
         {
             Logger.Clear();
+
+            this.Width = GetWidth(70);
+            this.Height = GetHeight(70);
+            this.Location = new Point( 
+                (GetWidth(100) / 2) - (this.Width / 2),
+                (GetHeight(100) / 2) - (this.Height / 2)
+            );
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

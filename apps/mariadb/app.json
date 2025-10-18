@@ -2,7 +2,7 @@
   "id": "mariadb",
   "title": "MariaDB",
   "description": "Installs MariaDB SQL Database with secure installation",
-  "image": "",
+  "image": "https://images.seeklogo.com/logo-png/31/1/maria-db-logo-png_seeklogo-316813.png",
   "author": "Marcel",
   "github": null,
   "created": null,
