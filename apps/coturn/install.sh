@@ -9,7 +9,7 @@ if hasOutput which coturn; then
   exit 0
 fi
 
-sudo apt install coturn
+sudo apt-get install coturn
 
 # default config stuff
 echo "TURNSERVER_ENABLED=1">/etc/default/coturn
@@ -19,7 +19,9 @@ echo "user-quota=10">>/etc/turnserver.conf
 echo "total-quota=200">>/etc/turnserver.conf
 
 # restart
-sudo service coturn restart
+sudo systemctl daemon-reload
+sudo systemctl enable coturn
+sudo systemctl restart coturn
 
 # and we're done
 echo "initra://install/done"
