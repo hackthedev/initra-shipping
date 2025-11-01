@@ -4,7 +4,7 @@ keys:
 turn:
   enabled: false
   domain: localhost
-  cert_file: /etc/letsencrypt/live/turn.deinedomain.at/fullchain.pem
-  key_file: /etc/letsencrypt/live/turn.deinedomain.at/privkey.pem
+  cert_file: /etc/letsencrypt/live/turn.domain.com/fullchain.pem
+  key_file: /etc/letsencrypt/live/turn.domain.com/privkey.pem
   tls_port: 5349
   udp_port: 3478
