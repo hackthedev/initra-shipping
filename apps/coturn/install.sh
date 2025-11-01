@@ -9,7 +9,7 @@ if hasOutput which coturn; then
   exit 0
 fi
 
-
+sudo apt install coturn
 
 # default config stuff
 echo "TURNSERVER_ENABLED=1">/etc/default/coturn
