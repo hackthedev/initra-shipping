@@ -23,7 +23,7 @@ mv phpMyAdmin-*-all-languages phpmyadmin
 chmod -R 0755 /usr/share/phpmyadmin
 
 # get config script
-wget https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/submissions/apps/phpmyadmin/phpmyadmin.conf -O /etc/apache2/conf-available/phpmyadmin.conf
+wget https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/phpmyadmin/phpmyadmin.conf -O /etc/apache2/conf-available/phpmyadmin.conf
 
 a2enconf phpmyadmin
 systemctl reload apache2

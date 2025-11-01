@@ -1,0 +1,20 @@
+{
+  "id": "livekit",
+  "title": "LiveKit",
+  "description": " LiveKit is used for real-time video, audio and more.",
+  "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSp8H1MB7R-EuH7Q-2YBGBD2UXerovTKO-Ew&s",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "type": "app",
+  "dependencies": [
+    "update",
+    "wget",
+    "curl",
+    "sudo"
+  ],
+  "args": {
+
+  }
+}

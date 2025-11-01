@@ -1,0 +1,17 @@
+{
+  "id": "curl",
+  "title": "curl",
+  "description": "Installs curl on your linux machine.",
+  "image": "",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "type": "package",
+  "dependencies": [
+    "update",
+    "sudo"
+  ],
+  "args": {
+  }
+}

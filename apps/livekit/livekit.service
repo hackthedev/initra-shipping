@@ -1,0 +1,16 @@
+[Unit]
+Description=LiveKit Server
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/home/livekit
+ExecStart=/usr/local/bin/livekit-server --config /home/livekit/livekit.yaml
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=livekit
+
+[Install]
+WantedBy=multi-user.target

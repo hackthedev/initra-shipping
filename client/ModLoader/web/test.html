@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCTS</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1a1d21 0%, #0d0e10 100%);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255,255,255,0.4), 0 0 80px rgba(120,140,255,0.3);
+            margin: 0;
+        }
+
+        h2 {
+            margin-top: 10px;
+            font-weight: 400;
+            color: #aaa;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px 40px;
+            border-radius: 10px;
+            margin-top: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #666, #aaa);
+            color: #111;
+            padding: 8px 20px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #fff, #ccc);
+        }
+    </style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="content">
+    <h1>DCTS</h1>
+    <h2>These are your saved servers</h2>
+    <div class="card">
+        <h3>Devil's Abys</h3>
+        <p>A very serious & cool community</p>
+        <div class="btn">Join</div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.3;
+            this.speedY = (Math.random() - 0.5) * 0.3;
+            this.alpha = Math.random() * 0.4 + 0.2;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+            if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+            const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size*8);
+            gradient.addColorStop(0, `rgba(120,140,255,${this.alpha})`);
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+    }
+
+    for(let i=0; i<140; i++){
+        particles.push(new Particle());
+    }
+
+    function animate(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(let p of particles){
+            p.update();
+            p.draw();
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+</body>
+</html>
