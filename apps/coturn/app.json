@@ -1,0 +1,20 @@
+{
+  "id": "coturn",
+  "title": "coTURN",
+  "description": "Installs coTURN to help with restricted networks",
+  "image": "",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "type": "app",
+  "dependencies": [
+    "update",
+    "wget",
+    "curl",
+    "sudo"
+  ],
+  "args": {
+
+  }
+}
