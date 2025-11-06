@@ -1,5 +1,5 @@
 keys:
-  dev: internal
+  dev: Minimum32CharacterLongKeyForSecurity
 
 turn:
   enabled: true
