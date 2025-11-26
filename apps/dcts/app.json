@@ -1,0 +1,15 @@
+{
+  "id": "dcts",
+  "title": "DCTS",
+  "description": "DCTS is a modern, self-hosted chat app",
+  "image": "https://raw.githubusercontent.com/hackthedev/dcts-shipping/refs/heads/main/public/img/default_icon.png",
+  "author": "Marcel",
+  "github": null,
+  "created": null,
+  "updated": null,
+  "type": "app",
+  "dependencies": [
+  ],
+  "args": {
+  }
+}
