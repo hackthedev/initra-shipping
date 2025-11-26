@@ -9,12 +9,17 @@ source <(wget -qO- https://raw.githubusercontent.com/hackthedev/initra-shipping/
 root_path="/home/dcts/instances"
 mkdir -p "$root_path"
 
-# argumentsetc
+# arguments etc
 instance_name="$(safeName "$(getArg create-instance "$@")")"
 instance_path="$root_path/$instance_name"
 port="$(getArg port "$@")"
 domain="$(getArg domain "$@")"
 email="$(getArg email "$@")"
+
+mariadb_pass=openssl rand -hex 16
+db_name="dcts_$instance_name"
+db_user="dcts_$instance_name"
+db_pass="$(openssl rand -hex 16)"
 
 # flag for checks
 validArgs=1
@@ -55,9 +60,19 @@ if ! hasOutput which curl; then
   apt install curl -y
 fi
 
+# install screen if missing
+if ! hasOutput which git; then
+  apt install screen -y
+fi
+
 # install git if missing
 if ! hasOutput which git; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/git/install.sh | bash
+fi
+
+# install nodejs if missing
+if ! hasOutput which node; then
+  curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/nodejs/install.sh | bash
 fi
 
 # install supervisorctl
@@ -65,12 +80,31 @@ if ! hasOutput which supervisorctl; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/supervisor/install.sh | bash
 fi
 
+# install mariadb
+if ! hasOutput which mariadb; then
+  curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/mariadb/install.sh | bash -s -- --rootPassword "$mariadb_pass"
+fi
+
+# setup the database and a user for it so everything works out of the box.
+# at this point im so happy i made the mariadb installer script and shit,
+# otherwise this would be so painful.
+#
+# create database
+mariadb -u root -p"$mariadb_pass" -e "CREATE DATABASE IF NOT EXISTS $db_name;"
+# create user
+mariadb -u root -p"$mariadb_pass" -e "CREATE USER IF NOT EXISTS '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
+# grant permissions
+mariadb -u root -p"$mariadb_pass" -e "GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost';"
+# apply changes
+mariadb -u root -p"$mariadb_pass" -e "FLUSH PRIVILEGES;"
+
 # install livekit. will be skipped if installed
 curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/livekit/install.sh | bash
 
 # optionally if set, get a cert file
 if hasFlag create-cert "$@"; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/snippets/certgen.sh | bash -s -- --domain "$domain" --email "$email" --path /home/livekit/
+  echo " " > "$instance_path/configs/ssl.txt"
 fi
 
 # install dcts main or beta
@@ -107,8 +141,26 @@ replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stdout_logfile=/home/
 replace "$instance_path/sv/start.sh" "/home/dcts" "$instance_path"
 replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv/start.sh"
 
+# dcts config file
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "/etc/letsencrypt/live/$domain/chain.pem"
+
 # adapt livekit config file
 replace "/home/livekit/livekit.yaml" "domain.com" "$domain"
+service livekit restart
+
+# install node packages
+cd "$instance_path" && npm i
+
+# export these vars into a file that dcts can read on start up and apply
+# the changes to the config.json file as i dont wanna deal with
+# json in this bash script. even tho its all kinda fun its painful at the
+# same time.
+echo "$db_user" > "$instance_path/configs/sql.txt"
+echo "$db_pass" >> "$instance_path/configs/sql.txt"
+echo "$db_name" >> "$instance_path/configs/sql.txt"
+
 
 # then we update the supervisor
 supervisorctl reread
