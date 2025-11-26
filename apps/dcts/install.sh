@@ -51,6 +51,11 @@ if [[ "$validArgs" == 0 ]]; then
 fi
 
 # install git if missing
+if ! hasOutput which curl; then
+  apt install curl -y
+fi
+
+# install git if missing
 if ! hasOutput which git; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/git/install.sh | bash
 fi
@@ -92,10 +97,18 @@ fi
 cp "$instance_path/sv/supervisor.conf.example" "/etc/supervisor/conf.d/dcts_$instance_name.conf"
 
 # now that we copied it, we need to change some settings inside the config file
+replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "program:dcts" "program:dcts_$instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "directory=/home/dcts/sv" "directory=$instance_path"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=sh check.sh" "command=sh sv/check.sh"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stderr_logfile=/home/dcts/sv/err.log" "stderr_logfile=$instance_path/sv/err.log"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stdout_logfile=/home/dcts/sv/out.log" "stdout_logfile=$instance_path/sv/out.log"
+
+# change dcts sv files
+replace "$instance_path/sv/start.sh" "/home/dcts" "$instance_path"
+replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv/start.sh"
+
+# adapt livekit config file
+replace "/home/livekit/livekit.yaml" "domain.com" "$domain"
 
 # then we update the supervisor
 supervisorctl reread
@@ -104,3 +117,5 @@ supervisorctl start dcts_$instance_name
 
 echo "initra://install/done"
 echo "initra://ssh/close"
+
+# bash dcts.sh --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com

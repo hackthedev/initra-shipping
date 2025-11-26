@@ -3,5 +3,5 @@ replace() {
   local search="$2"
   local replace="$3"
 
-  sed -i "s|$search|$replace|" "$file"
+  sed -i "s|$search|$replace|g" "$file"
 }
