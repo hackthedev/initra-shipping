@@ -16,7 +16,7 @@ port="$(getArg port "$@")"
 domain="$(getArg domain "$@")"
 email="$(getArg email "$@")"
 
-mariadb_pass=openssl rand -hex 16
+mariadb_pass="$(openssl rand -hex 16)"
 db_name="dcts_$instance_name"
 db_user="dcts_$instance_name"
 db_pass="$(openssl rand -hex 16)"
@@ -170,4 +170,5 @@ supervisorctl start dcts_$instance_name
 echo "initra://install/done"
 echo "initra://ssh/close"
 
+# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
 # bash dcts.sh --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
