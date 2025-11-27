@@ -101,6 +101,13 @@ mariadb -u root -p"$mariadb_pass" -e "FLUSH PRIVILEGES;"
 # install livekit. will be skipped if installed
 curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/livekit/install.sh | bash
 
+# install dcts main or beta
+if hasFlag beta "$@"; then
+  git clone --depth 1 https://github.com/hackthedev/dcts-shipping -b beta "$instance_path"
+else
+  git clone --depth 1 https://github.com/hackthedev/dcts-shipping "$instance_path"
+fi
+
 # optionally if set, get a cert file
 if hasFlag create-cert "$@"; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/snippets/certgen.sh | bash -s -- --domain "$domain" --email "$email" --path /home/livekit/
@@ -108,13 +115,6 @@ if hasFlag create-cert "$@"; then
   # create the configs dir if it doesnt exist already
   mkdir -p "$instance_path/configs/"
   echo " " > "$instance_path/configs/ssl.txt"
-fi
-
-# install dcts main or beta
-if hasFlag beta "$@"; then
-  git clone --depth 1 https://github.com/hackthedev/dcts-shipping -b beta "$instance_path"
-else
-  git clone --depth 1 https://github.com/hackthedev/dcts-shipping "$instance_path"
 fi
 
 # check if supervisor config exists
