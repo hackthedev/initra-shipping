@@ -118,7 +118,7 @@ if hasFlag create-cert "$@"; then
 
   # copy cert files for livekti
   cp -rf "/etc/letsencrypt/live/$domain/cert.pem" "/home/livekit/cert.pem"
-  cp -rf "/etc/letsencrypt/live/$domain/privkey.pem" "/home/livekit/key.pem"
+  cp -rf "/etc/letsencrypt/live/$domain/privkey.pem" "/home/livekit/privkey.pem"
 fi
 
 # check if supervisor config exists
