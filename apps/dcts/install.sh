@@ -135,7 +135,7 @@ cp "$instance_path/sv/supervisor.conf.example" "/etc/supervisor/conf.d/dcts_$ins
 # now that we copied it, we need to change some settings inside the config file
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "program:dcts" "program:dcts_$instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "directory=/home/dcts/sv" "directory=$instance_path"
-replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=sh check.sh" "command=sh sv/check.sh"
+replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=sh check.sh" "command=sh sv/check.sh $instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stderr_logfile=/home/dcts/sv/err.log" "stderr_logfile=$instance_path/sv/err.log"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stdout_logfile=/home/dcts/sv/out.log" "stdout_logfile=$instance_path/sv/out.log"
 
