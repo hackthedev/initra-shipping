@@ -3,5 +3,11 @@ replace() {
   local search="$2"
   local replace="$3"
 
-  sed -i "s|$search|$replace|g" "$file"
+  local search_escaped
+  local replace_escaped
+
+  search_escaped=$(printf '%s\n' "$search" | sed 's/[.[\*^$\/]/\\&/g')
+  replace_escaped=$(printf '%s\n' "$replace" | sed 's/[\/&]/\\&/g')
+
+  sed -i "s/$search_escaped/$replace_escaped/g" "$file"
 }
