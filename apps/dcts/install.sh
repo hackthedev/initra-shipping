@@ -112,12 +112,8 @@ fi
 
 # install dcts main or beta
 if hasFlag beta "$@"; then
-  # install beta
-  mkdir -p "$instance_path"
   git clone --depth 1 https://github.com/hackthedev/dcts-shipping -b beta "$instance_path"
 else
-  # install main
-  mkdir -p "$instance_path"
   git clone --depth 1 https://github.com/hackthedev/dcts-shipping "$instance_path"
 fi
 
@@ -174,5 +170,5 @@ supervisorctl start dcts_$instance_name
 echo "initra://install/done"
 echo "initra://ssh/close"
 
-# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
+# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain es2.network-z.com --email admin@xyz.com
 # bash dcts.sh --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
