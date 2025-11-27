@@ -135,7 +135,7 @@ cp "$instance_path/sv/supervisor.conf.example" "/etc/supervisor/conf.d/dcts_$ins
 # now that we copied it, we need to change some settings inside the config file
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "program:dcts" "program:dcts_$instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "directory=/home/dcts/sv" "directory=$instance_path"
-replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=sh check.sh" "command=sh sv/check.sh $instance_name"
+replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=bash check.sh" "command=bash sv/check.sh $instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stderr_logfile=/home/dcts/sv/err.log" "stderr_logfile=$instance_path/sv/err.log"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "stdout_logfile=/home/dcts/sv/out.log" "stdout_logfile=$instance_path/sv/out.log"
 
@@ -182,5 +182,5 @@ echo " "
 echo "Installation finished. Please check and see if the instance is reachable."
 echo "Thanks for considering DCTS <3"
 
-# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain dev002.network-z.com --email admin@xyz.com
+# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain dev0002.network-z.com --email admin@xyz.com
 # bash dcts.sh --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
