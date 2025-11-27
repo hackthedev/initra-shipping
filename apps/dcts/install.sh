@@ -141,10 +141,12 @@ replace "$instance_path/sv/start.sh" "/home/dcts" "$instance_path"
 replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv/start.sh"
 
 # dcts config file
-cp "$instance_path/config.json.example" "$instance_path/config.json"
+cp "$instance_path/config.example.json" "$instance_path/config.json"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "/etc/letsencrypt/live/$domain/chain.pem"
+replace "$instance_path/config.json" "Default Serve" "$instance_name"
+replace "$instance_path/config.json" "2052" "$port"
 
 # adapt livekit config file
 replace "/home/livekit/livekit.yaml" "domain.com" "$domain"
