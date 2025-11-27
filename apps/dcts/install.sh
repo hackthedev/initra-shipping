@@ -104,6 +104,9 @@ curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/head
 # optionally if set, get a cert file
 if hasFlag create-cert "$@"; then
   curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/snippets/certgen.sh | bash -s -- --domain "$domain" --email "$email" --path /home/livekit/
+
+  # create the configs dir if it doesnt exist already
+  mkdir -p "$instance_path/configs/"
   echo " " > "$instance_path/configs/ssl.txt"
 fi
 
@@ -142,6 +145,7 @@ replace "$instance_path/sv/start.sh" "/home/dcts" "$instance_path"
 replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv/start.sh"
 
 # dcts config file
+cp "$instance_path/config.json.example" "$instance_path/config.json"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
 replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "/etc/letsencrypt/live/$domain/chain.pem"
