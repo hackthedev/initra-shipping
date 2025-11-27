@@ -61,7 +61,7 @@ if ! hasOutput which curl; then
 fi
 
 # install screen if missing
-if ! hasOutput which git; then
+if ! hasOutput which screen; then
   apt install screen -y
 fi
 
@@ -116,9 +116,8 @@ if hasFlag create-cert "$@"; then
   mkdir -p "$instance_path/configs/"
   echo " " > "$instance_path/configs/ssl.txt"
 
-  # copy cert files for livekti
-  cp -rf "/etc/letsencrypt/live/$domain/cert.pem" "/home/livekit/cert.pem"
-  cp -rf "/etc/letsencrypt/live/$domain/privkey.pem" "/home/livekit/privkey.pem"
+  replace "/home/livekit/livekit.yaml" "/home/livekit/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
+  replace "/home/livekit/livekit.yaml" "/home/livekit/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
 fi
 
 # check if supervisor config exists
@@ -183,5 +182,5 @@ echo " "
 echo "Installation finished. Please check and see if the instance is reachable."
 echo "Thanks for considering DCTS <3"
 
-# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain devs02.network-z.com --email admin@xyz.com
+# curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --create-cert --domain dev2.network-z.com --email admin@xyz.com
 # bash dcts.sh --create-instance "Test Server 1" --port 2000 --create-cert --domain es1.network-z.com --email admin@xyz.com
