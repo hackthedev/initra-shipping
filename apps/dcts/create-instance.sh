@@ -11,7 +11,6 @@ root_path="/home/dcts/instances"
 instance_path="$root_path/$instance_name"
 port="$(getArg port "$@")"
 domain="$(getArg domain "$@")"
-email="$(getArg email "$@")"
 livekit_domain="lk.$domain"
 
 mariadb_pass="$(openssl rand -hex 16)"
@@ -31,19 +30,6 @@ fi
 if [[ -z "$port" ]]; then
   echo "No port name supplied"
   validArgs=0
-fi
-
-# if a cert file should be created
-if hasFlag create-cert "$@"; then
-  if [[ -z "$domain" ]]; then
-    echo "No domain name supplied"
-    validArgs=0
-  fi
-
-  if [[ -z "$email" ]]; then
-    echo "No email supplied"
-    validArgs=0
-  fi
 fi
 
 # if any check set it to 0, we need need to exit
