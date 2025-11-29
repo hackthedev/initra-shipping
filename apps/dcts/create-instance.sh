@@ -122,15 +122,12 @@ certdir_livekit="/var/lib/caddy/.local/share/caddy/certificates/acme-v02.api.let
 # if it does fucking exist then we overwrite the motherfucking livekit_domain variable for later use.
 # this shit is so painful i wanna smash my computer >:(
 # its not even that complex just hella annoying
-existing_lk_block="$(grep -oP '(?<=# LIVEKIT-).*' /etc/caddy/Caddyfile | head -n 1)"
+existing_lk_block="$(grep -oP '(?<=# LIVEKIT-).*' /etc/caddy/Caddyfile 2>/dev/null | head -n 1)"
 
-# exists, so update
-if [[ -n "$existing_lk_block" ]]; then
+if grep -q "# LIVEKIT-" /etc/caddy/Caddyfile 2>/dev/null; then
   livekit_domain="$existing_lk_block"
 else
-  # remove the default config shit
-  rm -rf "/etc/caddy/Caddyfile"
-cat >> /etc/caddy/Caddyfile <<EOF
+  cat > /etc/caddy/Caddyfile <<EOF
 # LIVEKIT-$livekit_domain
 $livekit_domain {
     reverse_proxy localhost:7880 {
@@ -146,6 +143,7 @@ $livekit_domain {
 }
 EOF
 fi
+
 
 # dcts reverse proxy
 if ! grep -q "# DCTS-$domain" "/etc/caddy/Caddyfile"; then
