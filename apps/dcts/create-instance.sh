@@ -7,6 +7,7 @@ source <(wget -qO- https://raw.githubusercontent.com/hackthedev/initra-shipping/
 
 # arguments etc
 instance_name="$(safeName "$(getArg create-instance "$@")")"
+root_path="/home/dcts/instances"
 instance_path="$root_path/$instance_name"
 port="$(getArg port "$@")"
 domain="$(getArg domain "$@")"
@@ -69,7 +70,7 @@ fi
 
 # install git if missing
 if ! hasOutput which git; then
-  apt install git -y
+  curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/git/install.sh | bash
 fi
 
 # install nodejs if missing
@@ -88,16 +89,11 @@ if ! hasOutput which mariadb; then
 fi
 
 # setup the database and a user for it so everything works out of the box.
-# at this point im so happy i made the mariadb installer script and shit,
-# otherwise this would be so painful.
 #
-# create database
+# create database etc
 mariadb -u root -p"$mariadb_pass" -e "CREATE DATABASE IF NOT EXISTS $db_name;"
-# create user
 mariadb -u root -p"$mariadb_pass" -e "CREATE USER IF NOT EXISTS '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
-# grant permissions
 mariadb -u root -p"$mariadb_pass" -e "GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost';"
-# apply changes
 mariadb -u root -p"$mariadb_pass" -e "FLUSH PRIVILEGES;"
 
 # install livekit. will be skipped if installed
@@ -110,31 +106,30 @@ else
   git clone --depth 1 https://github.com/hackthedev/dcts-shipping "$instance_path"
 fi
 
-# optionally if set, get a cert file
-if hasFlag create-cert "$@"; then
-  curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/snippets/certgen.sh | bash -s -- --domain "$domain" --email "$email" --path /home/livekit/
+mkdir -p "$instance_path/configs/"
+echo " " > "$instance_path/configs/ssl.txt"
 
-  # create the configs dir if it doesnt exist already
-  mkdir -p "$instance_path/configs/"
-  echo " " > "$instance_path/configs/ssl.txt"
+# trigger caddy to pull certificates
+systemctl reload caddy
+sleep 5
 
-  # only update livekit if its still default config
-  if ! grep -q "domain.com" "/home/livekit/livekit.yaml"; then
-    replace "/home/livekit/livekit.yaml" "/home/livekit/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
-    replace "/home/livekit/livekit.yaml" "/home/livekit/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
+# separate cert directories for dcts + livekit
+certdir_dcts="/var/lib/caddy/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/$domain"
+certdir_livekit="/var/lib/caddy/.local/share/caddy/certificates/acme-v02.api.letsencrypt.org-directory/$livekit_domain"
 
-    # adapt livekit config file
-    replace "/home/livekit/livekit.yaml" "domain.com" "$domain"
-    service livekit restart
-  else
-    livekit_domain="$(grep -oP 'domain:\s*\K.*')"
-  fi
-fi
 
-# setup reverse proxy inside the caddy file for the domain
-if ! grep -q "# $livekit_domain" "/etc/caddy/Caddyfile"; then
-    cat >> /etc/caddy/Caddyfile <<EOF
-# $livekit_domain
+# make livekit reverse proxy if it doesnt exist already.
+# if it does fucking exist then we overwrite the motherfucking livekit_domain variable for later use.
+# this shit is so painful i wanna smash my computer >:(
+# its not even that complex just hella annoying
+existing_lk_block="$(grep -oP '(?<=# LIVEKIT-).*' /etc/caddy/Caddyfile | head -n 1)"
+
+# exists, so update
+if [[ -n "$existing_lk_block" ]]; then
+  livekit_domain="$existing_lk_block"
+else
+cat >> /etc/caddy/Caddyfile <<EOF
+# LIVEKIT-$livekit_domain
 $livekit_domain {
     reverse_proxy localhost:7880 {
         transport http {
@@ -150,6 +145,17 @@ $livekit_domain {
 EOF
 fi
 
+# dcts reverse proxy
+if ! grep -q "# DCTS-$domain" "/etc/caddy/Caddyfile"; then
+cat >> /etc/caddy/Caddyfile <<EOF
+# DCTS-$domain
+$domain {
+    reverse_proxy localhost:$port
+}
+EOF
+fi
+
+systemctl reload caddy
 
 # check if supervisor config exists
 if [[ ! -f "$instance_path/sv/supervisor.conf.example" ]]; then
@@ -159,11 +165,10 @@ if [[ ! -f "$instance_path/sv/supervisor.conf.example" ]]; then
   exit 1
 fi
 
-# error didnt happen, so the config example file exists.
-# that means we need to copy it to the supervisor conf.d folder.
+# copy supervisor template
 cp "$instance_path/sv/supervisor.conf.example" "/etc/supervisor/conf.d/dcts_$instance_name.conf"
 
-# now that we copied it, we need to change some settings inside the config file
+# edit supervisor config
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "program:dcts" "program:dcts_$instance_name"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "directory=/home/dcts/sv" "directory=$instance_path"
 replace "/etc/supervisor/conf.d/dcts_$instance_name.conf" "command=bash check.sh" "command=bash sv/check.sh $instance_name"
@@ -176,9 +181,12 @@ replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv
 
 # dcts config file
 cp "$instance_path/config.example.json" "$instance_path/config.json"
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "/etc/letsencrypt/live/$domain/privkey.pem"
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "/etc/letsencrypt/live/$domain/cert.pem"
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "/etc/letsencrypt/live/$domain/chain.pem"
+
+# DCTS MUST USE DCTS DOMAIN CERTS
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "$certdir_dcts/$domain.key"
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "$certdir_dcts/$domain.crt"
+replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "$certdir_dcts/$domain.crt"
+
 replace "$instance_path/config.json" "default_livekit_url" "$livekit_domain"
 replace "$instance_path/config.json" "Default Server" "$instance_name"
 replace "$instance_path/config.json" "2052" "$port"
@@ -186,14 +194,10 @@ replace "$instance_path/config.json" "2052" "$port"
 # install node packages
 cd "$instance_path" && npm i
 
-# export these vars into a file that dcts can read on start up and apply
-# the changes to the config.json file as i dont wanna deal with
-# json in this bash script. even tho its all kinda fun its painful at the
-# same time.
+# write sql access file
 echo "$db_user" > "$instance_path/configs/sql.txt"
 echo "$db_pass" >> "$instance_path/configs/sql.txt"
 echo "$db_name" >> "$instance_path/configs/sql.txt"
-
 
 # then we update the supervisor
 supervisorctl reread
