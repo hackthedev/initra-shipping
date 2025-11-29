@@ -12,7 +12,7 @@ instance_path="$root_path/$instance_name"
 port="$(getArg port "$@")"
 domain="$(getArg domain "$@")"
 email="$(getArg email "$@")"
-livekit_domain="$domain"
+livekit_domain="lk.$domain"
 
 mariadb_pass="$(openssl rand -hex 16)"
 db_name="dcts_$instance_name"
@@ -128,6 +128,8 @@ existing_lk_block="$(grep -oP '(?<=# LIVEKIT-).*' /etc/caddy/Caddyfile | head -n
 if [[ -n "$existing_lk_block" ]]; then
   livekit_domain="$existing_lk_block"
 else
+  # remove the default config shit
+  rm -rf "/etc/caddy/Caddyfile"
 cat >> /etc/caddy/Caddyfile <<EOF
 # LIVEKIT-$livekit_domain
 $livekit_domain {
