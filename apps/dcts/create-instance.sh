@@ -127,7 +127,7 @@ if hasFlag create-cert "$@"; then
     replace "/home/livekit/livekit.yaml" "domain.com" "$domain"
     service livekit restart
   else
-    livekit_domain = "$(grep -oP 'domain:\s*\K.*')"
+    livekit_domain="$(grep -oP 'domain:\s*\K.*')"
   fi
 fi
 
