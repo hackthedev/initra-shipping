@@ -22,4 +22,4 @@ echo " "
 echo "Installation finished. Please check and see if the instance is reachable."
 echo "Thanks for considering DCTS <3"
 
-#apt install curl -y && curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 2" --port 2001 --domain dev3.network-z.com --email admin@xyz.com --beta
+#apt install curl -y && curl -sSL https://raw.githubusercontent.com/hackthedev/initra-shipping/refs/heads/main/apps/dcts/install.sh | bash -s -- --create-instance "Test Server 1" --port 2000 --domain dev3.network-z.com --beta
