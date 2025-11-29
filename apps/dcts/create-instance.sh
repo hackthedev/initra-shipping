@@ -134,11 +134,13 @@ $livekit_domain {
         transport http {
             versions h1_1
         }
+    }
 
-        header_down Access-Control-Allow-Origin *
-        header_down Access-Control-Allow-Methods "GET, POST, OPTIONS"
-        header_down Access-Control-Allow-Headers *
-        header_down Access-Control-Allow-Credentials true
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Access-Control-Allow-Headers *
+        Access-Control-Allow-Credentials true
     }
 }
 EOF
@@ -156,6 +158,14 @@ EOF
 fi
 
 systemctl reload caddy
+
+sleep 2
+
+replace "/home/livekit/livekit.yaml" "/home/livekit/cert.pem" "$certdir_dcts/$domain.crt"
+replace "/home/livekit/livekit.yaml" "/home/livekit/privkey.pem" "$certdir_dcts/$domain.key"
+replace "/home/livekit/livekit.yaml" "domain.com" "$livekit_domain"
+service livekit restart
+
 
 # check if supervisor config exists
 if [[ ! -f "$instance_path/sv/supervisor.conf.example" ]]; then
