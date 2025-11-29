@@ -18,6 +18,13 @@ db_name="dcts_$instance_name"
 db_user="dcts_$instance_name"
 db_pass="$(openssl rand -hex 16)"
 
+if [[ ! -d "$instance_path" ]]; then
+  echo "Instance already exists"
+  echo "initra://install/error"
+  echo "initra://ssh/close"
+  exit 1
+fi
+
 # flag for checks
 validArgs=1
 
