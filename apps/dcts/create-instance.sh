@@ -183,16 +183,16 @@ replace "$instance_path/sv/start.sh" "/home/dcts" "$instance_path"
 replace "$instance_path/sv/check.sh" "/home/dcts/sv/start.sh" "$instance_path/sv/start.sh"
 
 # dcts config file
-cp "$instance_path/config.example.json" "$instance_path/config.json"
+cp "$instance_path/config.example.json" "$instance_path/configs/config.json"
 
 # DCTS MUST USE DCTS DOMAIN CERTS
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "$certdir_dcts/$domain.key"
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "$certdir_dcts/$domain.crt"
-replace "$instance_path/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "$certdir_dcts/$domain.crt"
+replace "$instance_path/configs/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/privkey.pem" "$certdir_dcts/$domain.key"
+replace "$instance_path/configs/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/cert.pem" "$certdir_dcts/$domain.crt"
+replace "$instance_path/configs/config.json" "/etc/letsencrypt/live/EXAMPLE.COM/chain.pem" "$certdir_dcts/$domain.crt"
 
-replace "$instance_path/config.json" "default_livekit_url" "$livekit_domain"
-replace "$instance_path/config.json" "Default Server" "$instance_name"
-replace "$instance_path/config.json" "2052" "$port"
+replace "$instance_path/configs/config.json" "default_livekit_url" "$livekit_domain"
+replace "$instance_path/configs/config.json" "Default Server" "$instance_name"
+replace "$instance_path/configs/config.json" "2052" "$port"
 
 # install node packages
 cd "$instance_path" && npm i
